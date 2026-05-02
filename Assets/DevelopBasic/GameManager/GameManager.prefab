@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 279387380931078898}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -104,6 +103,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4759861360168245592}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -111,7 +111,6 @@ Transform:
   m_Children:
   - {fileID: 279387380931078898}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4759861360168245595
 MonoBehaviour:
@@ -128,13 +127,11 @@ MonoBehaviour:
   targetFrameRate: 60
   BlackScreenCanvasGroup: {fileID: 4562222128510109114}
   transitionDuration: 0.5
-  InitScene: Village
+  InitScene: Game
   isDemo: 1
   isTesting: 1
   demoText: {fileID: 6073298263620526879}
   loadInitSceneFromGameManager: 0
-  launchSettings: {fileID: 11400000, guid: df611141ed597a341a14d67be49bf1fb, type: 2}
-  debugSettings: {fileID: 11400000, guid: a29fe9365c3ee6449be4fa007a8104a4, type: 2}
   debugActions:
     m_Name: Debug Actions
     m_Id: ba3d51f1-048f-4d77-8a8d-e1782e6bd764
@@ -144,14 +141,6 @@ MonoBehaviour:
       m_Type: 1
       m_ExpectedControlType: Button
       m_Id: 9333990d-63ee-4b41-9572-958daabbca11
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    - m_Name: shake
-      m_Type: 1
-      m_ExpectedControlType: Button
-      m_Id: c708072c-b1d5-4e4e-a1ca-87c26728aad8
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -196,30 +185,6 @@ MonoBehaviour:
       m_Processors: 
       m_Groups: 
       m_Action: restart
-      m_Flags: 8
-    - m_Name: One Modifier
-      m_Id: 8d04b3da-684f-4f4d-984b-643f649b979d
-      m_Path: OneModifier
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: shake
-      m_Flags: 4
-    - m_Name: modifier
-      m_Id: 5532d295-8b6d-48e6-99ab-8da6ee545cc2
-      m_Path: <Keyboard>/shift
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: shake
-      m_Flags: 8
-    - m_Name: binding
-      m_Id: 1721643f-285a-46a6-a9dc-3669c57f9459
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: shake
       m_Flags: 8
     - m_Name: 
       m_Id: 4b0ac4f3-3da8-4cdd-ac33-b11d78f2e2e6
@@ -272,7 +237,6 @@ RectTransform:
   - {fileID: 7556986947078525989}
   - {fileID: 8586808868068472399}
   m_Father: {fileID: 4759861360168245594}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -296,7 +260,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
@@ -383,7 +349,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 279387380931078898}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
