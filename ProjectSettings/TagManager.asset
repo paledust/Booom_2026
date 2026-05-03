@@ -11,7 +11,7 @@ TagManager:
   - PostProcessing
   - Water
   - UI
-  - 
+  - Interactable
   - 
   - 
   - 
@@ -38,8 +38,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 841254035
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Frame
+    uniqueID: 3510448389
     locked: 0
   m_RenderingLayers:
   - Default
