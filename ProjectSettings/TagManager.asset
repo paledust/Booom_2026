@@ -47,5 +47,8 @@ TagManager:
   - name: Frame
     uniqueID: 3510448389
     locked: 0
+  - name: Hidden
+    uniqueID: 3714029295
+    locked: 0
   m_RenderingLayers:
   - Default

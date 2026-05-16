@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da7ef804e50b694abf4bd5bd0a081d2, type: 3}
+  m_Name: all_audio
+  m_EditorClassIdentifier: 
+  bgm_info_list: []
+  amb_info_list:
+  - audio_name: amb_city
+    audio_clip: {fileID: 8300000, guid: b2063b98ebd634e4b905ccbbbae1c80b, type: 3}
+  sfx_info_list:
+  - audio_name: sfx_phone_hero
+    audio_clip: {fileID: 8300000, guid: 025849f1dbdda8a439e7b033d94e1185, type: 3}
+  sfx_group_info_list:
+  - audio_group_name: group_phone_clock
+    audioClips:
+    - {fileID: 8300000, guid: b4c498f91c7f2e74886324a2d9ee2d34, type: 3}
+    - {fileID: 8300000, guid: 454d5fddcd2d52d4d84133de3fa12866, type: 3}
+    - {fileID: 8300000, guid: 025849f1dbdda8a439e7b033d94e1185, type: 3}
+    - {fileID: 8300000, guid: 1885b537b84a2d0488def3cc8dcca876, type: 3}

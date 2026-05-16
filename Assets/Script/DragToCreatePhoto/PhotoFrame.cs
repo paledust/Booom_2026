@@ -20,14 +20,15 @@ public class PhotoFrame : MonoBehaviour
         selectingFrame.gameObject.SetActive(true);
         photo.gameObject.SetActive(false);
     }
-    public void FixPhoto(Sprite photoSprite)
+    public void FixPhoto(Sprite photoSprite, int layerIndex)
     {
         selectingFrame.gameObject.SetActive(false);
         photo.gameObject.SetActive(true);
         photo.sprite = photoSprite;
         sortingGroup.sortingLayerID = SortingLayer.NameToID(DEFAULT_LAYER);
+        sortingGroup.sortingOrder = layerIndex;
     }
-    public void UpdateFrame(Rect rect)
+    public void UpdateFrame(Rect rect, float frameOffset)
     {
         transform.position = rect.center;
         Vector2 size = rect.size;
@@ -39,7 +40,7 @@ public class PhotoFrame : MonoBehaviour
         {
             size.y = -size.y;
         }
-        frame.size = size + Vector2.one * 0.1f;
+        frame.size = size + Vector2.one * frameOffset;
         photo.size = size;
         selectingFrame.size = size;
     }

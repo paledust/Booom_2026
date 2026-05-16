@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b035faf50d0c4547ab64d28c6066350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetFrameRate: 60
+  targetFrameRate: 90
   BlackScreenCanvasGroup: {fileID: 4562222128510109114}
   transitionDuration: 0.5
   InitScene: Game
