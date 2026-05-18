@@ -602,6 +602,7 @@ GameObject:
   - component: {fileID: 1808112243}
   - component: {fileID: 1808112244}
   - component: {fileID: 1808112245}
+  - component: {fileID: 1808112246}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -655,8 +656,20 @@ MonoBehaviour:
   minSize: {x: 1, y: 1}
   maskHandler:
     maskPrerfab: {fileID: 3515955417355683980, guid: 16d40ae22c39ccc4b86df00571fa3f1d, type: 3}
-  edgeHandler:
-    edgePrefab: {fileID: 4120680786843790381, guid: a4a26ff6f7ee31643a0693760477265a, type: 3}
+  edgeHandler: {fileID: 1808112246}
+--- !u!114 &1808112246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808112242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39110267f477f384b875c68124a9d75f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgeHandler
+  edgePrefab: {fileID: 4120680786843790381, guid: a4a26ff6f7ee31643a0693760477265a, type: 3}
 --- !u!1001 &2358589650421687024
 PrefabInstance:
   m_ObjectHideFlags: 0
