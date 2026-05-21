@@ -718,10 +718,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6244297043089654096, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: edgeType
-      value: 14
-      objectReference: {fileID: 0}
     - target: {fileID: 8531679620799411143, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
       propertyPath: m_Name
       value: interest_point

@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class PerRendererPhoto : PerRendererBehavior
@@ -9,7 +10,9 @@ public class PerRendererPhoto : PerRendererBehavior
     private const string PHOTO_SCALE_Y = "_ScaleY";
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = meshRenderer as SpriteRenderer;
+        if(spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
     }
     protected override void InitProperties()
     {
@@ -17,8 +20,24 @@ public class PerRendererPhoto : PerRendererBehavior
         mpb.SetFloat(PHOTO_X_OFFSET, transform.position.x);
         mpb.SetFloat(PHOTO_Y_OFFSET, transform.position.y);
 
-        float scale = Mathf.Max(spriteRenderer.size.x, spriteRenderer.size.y) / 14;
+        Vector2 size = 5 * transform.localScale;
+        float scale = Mathf.Max(size.x, size.y) / 14;
         mpb.SetFloat(PHOTO_SCALE_X, scale);
         mpb.SetFloat(PHOTO_SCALE_Y, scale);
     }
+#if UNITY_EDITOR
+    protected override void UpdateProperties()
+    {
+        if(!EditorApplication.isPlaying)
+        {
+            mpb.SetFloat(PHOTO_X_OFFSET, transform.position.x);
+            mpb.SetFloat(PHOTO_Y_OFFSET, transform.position.y);
+            
+            Vector2 size = 5 * transform.localScale;
+            float scale = Mathf.Max(size.x, size.y) / 14;
+            mpb.SetFloat(PHOTO_SCALE_X, scale);
+            mpb.SetFloat(PHOTO_SCALE_Y, scale);
+        }
+    }
+#endif
 }

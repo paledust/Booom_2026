@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [System.Flags]
@@ -12,127 +13,160 @@ public enum EdgeType
 }
 public class EdgeHandler : MonoBehaviour
 {
-    public struct EdgeLine
+    [SerializeField] private GameObject edgePrefab;
+    private EdgeType activeEdgeTypes;
+    private Vector2 correctPoint;
+    private Rect activeRect;
+    public bool m_hasEdge => activeEdgeTypes != EdgeType.None;
+
+    public Vector2 GetEdgeCorrectPoint(Vector2 startPoint, Vector2 endPoint, out EdgeType alignEdge)
     {
-        public readonly Vector2 start;
-        public readonly Vector2 end;
-        private readonly EdgeType edgeType;
-        public EdgeLine(Vector2 start, Vector2 end, EdgeType edgeType)
+        //起始点在内部，直接返回
+        if(activeRect.Contains(startPoint))
         {
-            this.start = start;
-            this.end = end;
-            this.edgeType = edgeType;
+            correctPoint = endPoint;
+            alignEdge = EdgeType.None;
+            return endPoint;
         }
-        public Vector2 PointCorrection(Vector2 startPoint, Vector2 endPoint)
+        
+        Vector2 min = new Vector2(Mathf.Min(startPoint.x, endPoint.x), Mathf.Min(startPoint.y, endPoint.y));
+        Vector2 max = new Vector2(Mathf.Max(startPoint.x, endPoint.x), Mathf.Max(startPoint.y, endPoint.y));
+        var rect = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        if(!activeRect.Overlaps(rect))
         {
+            correctPoint = endPoint;
+            alignEdge = EdgeType.None;
+            return endPoint;
+        }
+
+        Vector2 dir = endPoint - startPoint;
+        if(startPoint.x > activeRect.xMin && startPoint.x < activeRect.xMax)
+        {
+            if(startPoint.y > activeRect.yMax && (activeEdgeTypes & EdgeType.Top)!=0)
+                return AlignToTop(endPoint, out alignEdge);
+            if(startPoint.y < activeRect.yMin && (activeEdgeTypes & EdgeType.Bottom)!=0)
+                return AlignToBottom(endPoint, out alignEdge);
+        }
+        if(startPoint.y > activeRect.yMin && startPoint.y < activeRect.yMax)
+        {
+            if(startPoint.x > activeRect.xMax && (activeEdgeTypes & EdgeType.Right)!=0)
+                return AlignToRight(endPoint, out alignEdge);
+            if(startPoint.x < activeRect.xMin && (activeEdgeTypes & EdgeType.Left)!=0)
+                return AlignToLeft(endPoint, out alignEdge);
+        }
+        //左上
+        if(startPoint.x < activeRect.xMin && startPoint.y > activeRect.yMax)
+        {
+            Vector2 corner = new Vector2(activeRect.xMin, activeRect.yMax);
+            Vector2 diff = endPoint - corner;
+            if(Mathf.Abs(diff.y)>Mathf.Abs(diff.x))
+                return AlignToLeft(endPoint, out alignEdge);
+            else
+                return AlignToTop(endPoint, out alignEdge);
+        }
+        //右下
+        if(startPoint.x > activeRect.xMax && startPoint.y < activeRect.yMin)
+        {
+            Vector2 corner = new Vector2(activeRect.xMax, activeRect.yMin);
+            Vector2 diff = endPoint - corner;
+            if(Mathf.Abs(diff.y)>Mathf.Abs(diff.x))
+                return AlignToRight(endPoint, out alignEdge);
+            else
+                return AlignToBottom(endPoint, out alignEdge);
+        }
+        //左下
+        if(startPoint.x < activeRect.xMin && startPoint.y < activeRect.yMin)
+        {
+            Vector2 corner = new Vector2(activeRect.xMin, activeRect.yMin);
+            Vector2 diff = endPoint - corner;
+            if(Mathf.Abs(diff.y)>Mathf.Abs(diff.x))
+                return AlignToLeft(endPoint, out alignEdge);
+            else
+                return AlignToBottom(endPoint, out alignEdge);
+        }
+        //右上
+        if(startPoint.x > activeRect.xMax && startPoint.y > activeRect.yMax)
+        {
+            Vector2 corner = new Vector2(activeRect.xMin, activeRect.yMax);
+            Vector2 diff = endPoint - corner;
+            if(Mathf.Abs(diff.y)>Mathf.Abs(diff.x))
+                return AlignToRight(endPoint, out alignEdge);
+            else
+                return AlignToTop(endPoint, out alignEdge);
+        }
+        alignEdge = EdgeType.None;
+        return endPoint;
+    }
+    Vector2 AlignToTop(Vector2 point, out EdgeType alignEdge)
+    {
+        Vector2 intersect = point + Vector2.up * (activeRect.yMax - point.y);
+        correctPoint = intersect;
+        alignEdge = EdgeType.Top;
+        return intersect;
+    }
+    Vector2 AlignToBottom(Vector2 point, out EdgeType alignEdge)
+    {
+        Vector2 intersect = point + Vector2.down * (point.y - activeRect.yMin);
+        correctPoint = intersect;
+        alignEdge = EdgeType.Bottom;
+
+        return intersect;
+    }
+    Vector2 AlignToLeft(Vector2 point, out EdgeType alignEdge)
+    {
+        Vector2 intersect = point + Vector2.left * (point.x - activeRect.xMin);
+        correctPoint = intersect;
+        alignEdge = EdgeType.Left;
+        return intersect;
+    }
+    Vector2 AlignToRight(Vector2 point, out EdgeType alignEdge)
+    {
+        Vector2 intersect = point + Vector2.right * (activeRect.xMax - point.x);
+        correctPoint = intersect;
+        alignEdge = EdgeType.Right;
+        return intersect;
+    }
+    public void CreateConstraintRect(Rect rect, EdgeType edgeType)
+    {
+        activeRect = rect;
+        activeEdgeTypes = edgeType;
+        DrawEdge(rect, EdgeType.Top);
+        DrawEdge(rect, EdgeType.Bottom);
+        DrawEdge(rect, EdgeType.Left);
+        DrawEdge(rect, EdgeType.Right);
+    }
+    public void DrawEdge(Rect rect, EdgeType edgeType)
+    {
+        if((activeEdgeTypes & edgeType)!=0)
+        {
+            Vector2 start, end;
             switch(edgeType)
             {
                 case EdgeType.Top:
-                    if(startPoint.y < start.y)
-                        return endPoint;
-                    else
-                        return EdgeCorrect(startPoint, endPoint);
+                    start = rect.min + Vector2.up * rect.height;
+                    end = rect.max;
+                    break;
                 case EdgeType.Bottom:
-                    if(startPoint.y > start.y)
-                        return endPoint;
-                    else
-                        return EdgeCorrect(startPoint, endPoint);
+                    start = rect.min;
+                    end = rect.max + Vector2.down * rect.height;
+                    break;
                 case EdgeType.Left:
-                    if(startPoint.x > start.x)
-                        return endPoint;
-                    else
-                        return EdgeCorrect(startPoint, endPoint);
+                    start = rect.min;
+                    end = rect.min + Vector2.up * rect.height;
+                    break;
                 case EdgeType.Right:
-                    if(startPoint.x < start.x)
-                        return endPoint;
-                    else
-                        return EdgeCorrect(startPoint, endPoint);
+                    start = rect.max + Vector2.down * rect.height;
+                    end = rect.max;
+                    break;
                 default:
-                    return endPoint;
+                    start = Vector2.zero;
+                    end = Vector2.right;
+                    break;
             }
+            var edgeObj = Instantiate(edgePrefab);
+            edgeObj.transform.localScale = new Vector3(Vector2.Distance(start, end), edgeObj.transform.localScale.y, 0);
+            edgeObj.transform.rotation = Quaternion.FromToRotation(Vector3.right, end - start);
+            edgeObj.transform.position = (start + end) * 0.5f;
         }
-        private Vector2 EdgeCorrect(Vector2 startPoint, Vector2 endPoint)
-        {
-            bool isVertical = edgeType == EdgeType.Left || edgeType == EdgeType.Right;
-            if(isVertical)
-            {
-                if((startPoint.y - start.y) * (endPoint.y - start.y) > 0 && 
-                    (startPoint.y - end.y) * (endPoint.y - end.y) > 0 &&
-                    (start.y - startPoint.y) * (end.y - startPoint.y) > 0)
-                    return endPoint;
-                else
-                    switch(edgeType)
-                    {
-                        case EdgeType.Left:
-                            endPoint.x = Mathf.Min(endPoint.x, start.x);
-                            return endPoint;
-                        case EdgeType.Right:
-                            endPoint.x = Mathf.Max(endPoint.x, start.x);
-                            return endPoint;
-                        default:
-                            return endPoint;
-                    }
-            }
-            else
-            {
-                if((startPoint.x - start.x) * (endPoint.x - start.x) > 0 && 
-                    (startPoint.x - end.x) * (endPoint.x - end.x) > 0 &&
-                    (start.x - startPoint.x) * (end.x - startPoint.x) > 0)
-                    return endPoint;
-                else
-                    switch(edgeType)
-                    {
-                        case EdgeType.Top:
-                            endPoint.y = Mathf.Max(endPoint.y, start.y);
-                            return endPoint;
-                        case EdgeType.Bottom:
-                            endPoint.y = Mathf.Min(endPoint.y, start.y);
-                            return endPoint;
-                        default:
-                            return endPoint;
-                    }
-            }
-        }
-    }
-    [SerializeField] private GameObject edgePrefab;
-    private List<EdgeLine> currentEdges = new List<EdgeLine>();
-    public bool m_hasEdge => currentEdges!=null && currentEdges.Count > 0;
-
-    public Vector2 GetEdgeCorrectPoint(Vector2 startPoint, Vector2 endPoint)
-    {
-        Vector2 maxPoint = endPoint;
-        foreach(var edge in currentEdges)
-        {
-            maxPoint = edge.PointCorrection(startPoint, maxPoint);
-        }
-        return maxPoint;
-    }
-    public EdgeLine AddEdgeToRect(Rect rect, EdgeType edgeType)
-    {
-        EdgeLine edge;
-        switch(edgeType)
-        {
-            case EdgeType.Top:
-                edge = new EdgeLine(rect.min + Vector2.up * rect.height, rect.max, EdgeType.Top);
-                break;
-            case EdgeType.Bottom:
-                edge = new EdgeLine(rect.min, rect.max + Vector2.down * rect.height, EdgeType.Bottom);
-                break;
-            case EdgeType.Left:
-                edge = new EdgeLine(rect.min, rect.min + Vector2.up * rect.height, EdgeType.Left);
-                break;
-            case EdgeType.Right:
-                edge = new EdgeLine(rect.max + Vector2.down * rect.height, rect.max, EdgeType.Right);
-                break;
-            default:
-                edge = new EdgeLine(Vector2.zero, Vector2.right, EdgeType.None);
-                break;
-        }
-        var edgeObj = Instantiate(edgePrefab);
-        edgeObj.transform.localScale = new Vector3(Vector2.Distance(edge.start, edge.end), edgeObj.transform.localScale.y, 0);
-        edgeObj.transform.rotation = Quaternion.FromToRotation(Vector3.right, edge.end - edge.start);
-        edgeObj.transform.position = (edge.start + edge.end) * 0.5f;
-        currentEdges.Add(edge);
-        return edge;
     }
 }

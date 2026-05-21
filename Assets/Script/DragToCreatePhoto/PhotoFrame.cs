@@ -5,9 +5,8 @@ public class PhotoFrame : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer frame;
     [SerializeField] private SpriteRenderer selectingFrame;
-    [SerializeField] private SpriteRenderer photo;
     [SerializeField] private SortingGroup sortingGroup;
-    
+    private GameObject photo;
     private const string FRAME_LAYER = "Frame";
     private const string DEFAULT_LAYER = "Default";
 
@@ -18,13 +17,13 @@ public class PhotoFrame : MonoBehaviour
         sortingGroup.sortingOrder = layerIndex;
         sortingGroup.sortingLayerID = SortingLayer.NameToID(FRAME_LAYER);
         selectingFrame.gameObject.SetActive(true);
-        photo.gameObject.SetActive(false);
     }
-    public void FixPhoto(Sprite photoSprite, int layerIndex)
+    public void FixPhoto(GameObject photoPrefab, int layerIndex)
     {
         selectingFrame.gameObject.SetActive(false);
-        photo.gameObject.SetActive(true);
-        photo.sprite = photoSprite;
+        photo = Instantiate(photoPrefab, transform);
+        photo.transform.localScale = new Vector3(frame.size.x/5f, frame.size.y/5, 0);
+        photo.transform.SetSiblingIndex(0);
         sortingGroup.sortingLayerID = SortingLayer.NameToID(DEFAULT_LAYER);
         sortingGroup.sortingOrder = layerIndex;
     }
@@ -41,7 +40,6 @@ public class PhotoFrame : MonoBehaviour
             size.y = -size.y;
         }
         frame.size = size + Vector2.one * frameOffset;
-        photo.size = size;
         selectingFrame.size = size;
     }
 }

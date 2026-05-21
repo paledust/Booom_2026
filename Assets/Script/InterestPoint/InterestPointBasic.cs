@@ -1,12 +1,9 @@
-using System;
 using UnityEngine;
 
 public class InterestPointBasic : MonoBehaviour
 {
-    [SerializeField] private Sprite photo;
+    [SerializeField] private PhotoData photo;
     [SerializeField] private Collider2D hitbox;
-    [SerializeField] private EdgeType edgeType;
-    public EdgeType m_edgeType => edgeType;
 
     public void RevealPoint()
     {
@@ -16,7 +13,7 @@ public class InterestPointBasic : MonoBehaviour
     {
         hitbox.enabled = true;
     }
-    public Sprite GetNextPhoto()
+    public PhotoData GetNextPhoto()
     {
         Destroy(gameObject);
         return photo;

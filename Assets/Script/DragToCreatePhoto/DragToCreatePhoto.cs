@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 using Interaction;
-using System.Collections.Generic;
 
 public class DragToCreatePhoto : MonoBehaviour
 {
@@ -60,6 +59,7 @@ public class DragToCreatePhoto : MonoBehaviour
     
     private PlayerInputAction.PlayerActions playerActions;
     private PhotoFrame currentFrame;
+    private PhotoData topPhoto;
     private Vector2 minPoint;
     private Vector2 maxPoint;
     private int layerIndex;
@@ -69,6 +69,7 @@ public class DragToCreatePhoto : MonoBehaviour
 
     void Start()
     {
+        topPhoto = null;
         playerActions = new PlayerInputAction().Player;
         Service.Shuffle(ref poolFrames);
         frameIndex = 0;
@@ -89,13 +90,14 @@ public class DragToCreatePhoto : MonoBehaviour
         {
             var worldPos = Camera.main.ScreenToWorldPoint(playerActions.PointerPosition.ReadValue<Vector2>());
             worldPos.z = 0;
-            maxPoint = worldPos;
+            Vector2 targetPoint = worldPos;
 
             if(edgeHandler.m_hasEdge)
             {
-                maxPoint = edgeHandler.GetEdgeCorrectPoint(minPoint, maxPoint);
+                targetPoint = edgeHandler.GetEdgeCorrectPoint(minPoint, targetPoint, out var alignEdge);
             }
 
+            maxPoint = Vector2.Lerp(maxPoint, targetPoint, Time.deltaTime * 40);
             var rect = Rect.MinMaxRect(minPoint.x, minPoint.y, maxPoint.x, maxPoint.y);
             if(rect.width > maxSize.x)
                 rect.xMax = rect.xMin + maxSize.x;
@@ -117,6 +119,8 @@ public class DragToCreatePhoto : MonoBehaviour
             var worldPos = Camera.main.ScreenToWorldPoint(playerActions.PointerPosition.ReadValue<Vector2>());
             worldPos.z = 0;
             minPoint = worldPos;
+            maxPoint = worldPos;
+
             var go = Instantiate(photoPrefab, worldPos, Quaternion.identity);
             currentFrame = go.GetComponent<PhotoFrame>();
             currentFrame.Init(worldPos, layerIndex, poolFrames[frameIndex]);
@@ -132,11 +136,9 @@ public class DragToCreatePhoto : MonoBehaviour
     {
         if(currentFrame != null)
         {
-            var rect = Rect.MinMaxRect(minPoint.x, minPoint.y, maxPoint.x, maxPoint.y);
-            Vector2 min = new Vector2(Mathf.Min(rect.min.x, rect.max.x), Mathf.Min(rect.min.y, rect.max.y));
-            Vector2 max = new Vector2(Mathf.Max(rect.min.x, rect.max.x), Mathf.Max(rect.min.y, rect.max.y));
-            rect.min = min;
-            rect.max = max;
+            Vector2 min = new Vector2(Mathf.Min(minPoint.x, maxPoint.x), Mathf.Min(minPoint.y, maxPoint.y));
+            Vector2 max = new Vector2(Mathf.Max(minPoint.x, maxPoint.x), Mathf.Max(minPoint.y, maxPoint.y));
+            var rect = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
 
             minPoint = rect.min;
             maxPoint = rect.max;
@@ -156,22 +158,12 @@ public class DragToCreatePhoto : MonoBehaviour
 
             layerIndex++;
             currentFrame.UpdateFrame(rect, FRAME_OFFSET);
-            currentFrame.FixPhoto(interestPoint.GetNextPhoto(), layerIndex);
-
-            TestEdge(interestPoint, rect, EdgeType.Top);
-            TestEdge(interestPoint, rect, EdgeType.Bottom);
-            TestEdge(interestPoint, rect, EdgeType.Left);
-            TestEdge(interestPoint, rect, EdgeType.Right);
+            topPhoto = interestPoint.GetNextPhoto();
+            currentFrame.FixPhoto(topPhoto.GetPhoto(), layerIndex);
+            edgeHandler.CreateConstraintRect(rect, topPhoto.GetEdgeConfig().edge);
 
             currentFrame = null;
             maskHandler.ClearMask();
-        }
-    }
-    void TestEdge(InterestPointBasic interestPoint, Rect rect, EdgeType edgeType)
-    {
-        if((interestPoint.m_edgeType & edgeType)!=0)
-        {
-            edgeHandler.AddEdgeToRect(rect, edgeType);
         }
     }
     void CancelFrame()
