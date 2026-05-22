@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InterestPointBasic : MonoBehaviour
 {
-    [SerializeField] private PhotoData photo;
+    [SerializeField] private PhotoDistributorData photo;
     [SerializeField] private Collider2D hitbox;
 
     public void RevealPoint()
@@ -13,9 +13,9 @@ public class InterestPointBasic : MonoBehaviour
     {
         hitbox.enabled = true;
     }
-    public PhotoData GetNextPhoto()
+    public PhotoDistributor GetNextPhoto()
     {
         Destroy(gameObject);
-        return photo;
+        return photo.GetPhotoInstance();
     }
 }

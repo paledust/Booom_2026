@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [System.Flags]
@@ -15,16 +13,14 @@ public class EdgeHandler : MonoBehaviour
 {
     [SerializeField] private GameObject edgePrefab;
     private EdgeType activeEdgeTypes;
-    private Vector2 correctPoint;
     private Rect activeRect;
     public bool m_hasEdge => activeEdgeTypes != EdgeType.None;
-
+    
     public Vector2 GetEdgeCorrectPoint(Vector2 startPoint, Vector2 endPoint, out EdgeType alignEdge)
     {
         //起始点在内部，直接返回
         if(activeRect.Contains(startPoint))
         {
-            correctPoint = endPoint;
             alignEdge = EdgeType.None;
             return endPoint;
         }
@@ -34,7 +30,6 @@ public class EdgeHandler : MonoBehaviour
         var rect = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
         if(!activeRect.Overlaps(rect))
         {
-            correctPoint = endPoint;
             alignEdge = EdgeType.None;
             return endPoint;
         }
@@ -97,17 +92,19 @@ public class EdgeHandler : MonoBehaviour
         alignEdge = EdgeType.None;
         return endPoint;
     }
+    public void CompleteEdge(EdgeType edgeType)
+    {
+        activeEdgeTypes |= edgeType;
+    }
     Vector2 AlignToTop(Vector2 point, out EdgeType alignEdge)
     {
         Vector2 intersect = point + Vector2.up * (activeRect.yMax - point.y);
-        correctPoint = intersect;
         alignEdge = EdgeType.Top;
         return intersect;
     }
     Vector2 AlignToBottom(Vector2 point, out EdgeType alignEdge)
     {
         Vector2 intersect = point + Vector2.down * (point.y - activeRect.yMin);
-        correctPoint = intersect;
         alignEdge = EdgeType.Bottom;
 
         return intersect;
@@ -115,14 +112,12 @@ public class EdgeHandler : MonoBehaviour
     Vector2 AlignToLeft(Vector2 point, out EdgeType alignEdge)
     {
         Vector2 intersect = point + Vector2.left * (point.x - activeRect.xMin);
-        correctPoint = intersect;
         alignEdge = EdgeType.Left;
         return intersect;
     }
     Vector2 AlignToRight(Vector2 point, out EdgeType alignEdge)
     {
         Vector2 intersect = point + Vector2.right * (activeRect.xMax - point.x);
-        correctPoint = intersect;
         alignEdge = EdgeType.Right;
         return intersect;
     }

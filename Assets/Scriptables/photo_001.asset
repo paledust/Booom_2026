@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: photo_001
   m_EditorClassIdentifier: Assembly-CSharp::SO_Photo
   tag: -1
-  photoPrefab: {fileID: 5756785490119484122, guid: 69e5be2501af52347ad811eb2877a9af, type: 3}
   edgeConfig:
     edge: 12
-    photoDatas:
-    - {fileID: 11400000, guid: 8958dc9d44202d240af429b3e041d053, type: 2}
-    - {fileID: 11400000, guid: 1dbb839689c7ea74caed1f6e34213bdc, type: 2}
+    photoDatas: {fileID: 11400000, guid: c1175f8f4cbecb64892b27e3362821a9, type: 2}
+  photoPrefab: {fileID: 5756785490119484122, guid: 69e5be2501af52347ad811eb2877a9af, type: 3}

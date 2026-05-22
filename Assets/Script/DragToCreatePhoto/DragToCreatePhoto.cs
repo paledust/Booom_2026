@@ -59,17 +59,18 @@ public class DragToCreatePhoto : MonoBehaviour
     
     private PlayerInputAction.PlayerActions playerActions;
     private PhotoFrame currentFrame;
-    private PhotoDataSingle topPhoto;
+    private PhotoDistributor currentPhoto;
     private Vector2 minPoint;
     private Vector2 maxPoint;
     private int layerIndex;
     private int frameIndex;
+    private EdgeType currentBlockEdge;
 
     private const float FRAME_OFFSET = 0.01f;
 
     void Start()
     {
-        topPhoto = null;
+        currentPhoto = null;
         playerActions = new PlayerInputAction().Player;
         Service.Shuffle(ref poolFrames);
         frameIndex = 0;
@@ -95,6 +96,10 @@ public class DragToCreatePhoto : MonoBehaviour
             if(edgeHandler.m_hasEdge)
             {
                 targetPoint = edgeHandler.GetEdgeCorrectPoint(minPoint, targetPoint, out var alignEdge);
+                if(alignEdge == EdgeType.None && currentBlockEdge != EdgeType.None)
+                    currentBlockEdge = EdgeType.None;
+                if(alignEdge != EdgeType.None && currentBlockEdge == EdgeType.None)
+                    currentBlockEdge = alignEdge;
             }
 
             maxPoint = Vector2.Lerp(maxPoint, targetPoint, Time.deltaTime * 40);
@@ -149,6 +154,18 @@ public class DragToCreatePhoto : MonoBehaviour
                 return;
             }
             
+            if(currentBlockEdge!=EdgeType.None && currentPhoto!=null)
+            {
+                var edgeConfig = currentPhoto.GetEdgeConfig();
+                if((edgeConfig.edge & currentBlockEdge) > 0)
+                {
+                    FixPhoto(rect, edgeConfig.photoDatas.GetPhotoInstance(), false);
+                    edgeHandler.CompleteEdge(currentBlockEdge);
+                    currentBlockEdge = EdgeType.None;
+                }
+                return;
+            }
+
             var interestPoint = FrameDetector.DetectSelectingFrame(rect.min, rect.max);
             if(interestPoint == null)
             {
@@ -156,14 +173,23 @@ public class DragToCreatePhoto : MonoBehaviour
                 return;    
             }
 
-            layerIndex++;
-            currentFrame.UpdateFrame(rect, FRAME_OFFSET);
-            topPhoto = interestPoint.GetNextPhoto();
-            currentFrame.FixPhoto(topPhoto.GetPhoto(), layerIndex);
-            edgeHandler.CreateConstraintRect(rect, topPhoto.GetEdgeConfig().edge);
+            FixPhoto(rect, interestPoint.GetNextPhoto(), true);
+        }
+    }
+    void FixPhoto(Rect rect, PhotoDistributor photo, bool setAsMainPhoto)
+    {
 
-            currentFrame = null;
-            maskHandler.ClearMask();
+        layerIndex++;
+        currentFrame.UpdateFrame(rect, FRAME_OFFSET);
+        currentFrame.FixPhoto(photo.GetPhotoPrefab(), layerIndex);
+
+        currentFrame = null;
+        maskHandler.ClearMask();
+
+        if(setAsMainPhoto)
+        {
+            currentPhoto = photo;
+            edgeHandler.CreateConstraintRect(rect, photo.GetEdgeConfig().edge);
         }
     }
     void CancelFrame()
