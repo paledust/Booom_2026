@@ -1,24 +1,19 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
-[CreateAssetMenu(fileName = "PhotoData", menuName = "Scriptable Objects/PhotoData")]
-public class PhotoData : ScriptableObject
+[Flags]
+public enum PhotoTag{}
+[Serializable]
+public class PhotoEdgeConfig
 {
-    [Flags]
-    public enum PhotoTag
-    {
-        
-    }
-    [Serializable]
-    public class PhotoEdgeConfig
-    {
-        public EdgeType edge;
-        public PhotoData[] photoDatas;
-    }
-    [SerializeField] private PhotoTag tag;
-    [SerializeField] private GameObject photoPrefab;
-    [SerializeField] private PhotoEdgeConfig edgeConfig;
+    public EdgeType edge;
+    public PhotoDataSingle[] photoDatas;
+}
+public abstract class PhotoData : ScriptableObject
+{
+    [SerializeField] protected PhotoTag tag;
+    [SerializeField] protected PhotoEdgeConfig edgeConfig;
 
-    public GameObject GetPhoto() => photoPrefab;
+    public abstract GameObject GetPhoto();
     public PhotoEdgeConfig GetEdgeConfig() => edgeConfig;
 }

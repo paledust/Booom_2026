@@ -59,7 +59,7 @@ public class DragToCreatePhoto : MonoBehaviour
     
     private PlayerInputAction.PlayerActions playerActions;
     private PhotoFrame currentFrame;
-    private PhotoData topPhoto;
+    private PhotoDataSingle topPhoto;
     private Vector2 minPoint;
     private Vector2 maxPoint;
     private int layerIndex;
