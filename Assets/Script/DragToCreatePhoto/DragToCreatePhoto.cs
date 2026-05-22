@@ -56,6 +56,7 @@ public class DragToCreatePhoto : MonoBehaviour
     [SerializeField] private Vector2 minSize;
     [SerializeField] private MaskHandler maskHandler;
     [SerializeField] private EdgeHandler edgeHandler;
+    [SerializeField] private PhotoDistributeController photoDistributeController;
     
     private PlayerInputAction.PlayerActions playerActions;
     private PhotoFrame currentFrame;
@@ -154,12 +155,12 @@ public class DragToCreatePhoto : MonoBehaviour
                 return;
             }
             
-            if(currentBlockEdge!=EdgeType.None && currentPhoto!=null)
+            if(currentBlockEdge != EdgeType.None && currentPhoto!=null)
             {
                 var edgeConfig = currentPhoto.GetEdgeConfig();
                 if((edgeConfig.edge & currentBlockEdge) > 0)
                 {
-                    FixPhoto(rect, edgeConfig.photoDatas.GetPhotoInstance(), false);
+                    FixPhoto(rect, edgeConfig.photoDatas, false);
                     edgeHandler.CompleteEdge(currentBlockEdge);
                     currentBlockEdge = EdgeType.None;
                 }
@@ -176,9 +177,9 @@ public class DragToCreatePhoto : MonoBehaviour
             FixPhoto(rect, interestPoint.GetNextPhoto(), true);
         }
     }
-    void FixPhoto(Rect rect, PhotoDistributor photo, bool setAsMainPhoto)
+    void FixPhoto(Rect rect, PhotoDistributorData photoData, bool setAsMainPhoto)
     {
-
+        var photo = photoDistributeController.GetPhotoDistributor(photoData);
         layerIndex++;
         currentFrame.UpdateFrame(rect, FRAME_OFFSET);
         currentFrame.FixPhoto(photo.GetPhotoPrefab(), layerIndex);

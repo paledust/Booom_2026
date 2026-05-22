@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Flags]
@@ -14,6 +15,7 @@ public class EdgeHandler : MonoBehaviour
     [SerializeField] private GameObject edgePrefab;
     private EdgeType activeEdgeTypes;
     private Rect activeRect;
+    private Dictionary<EdgeType, GameObject> dictEdge;
     public bool m_hasEdge => activeEdgeTypes != EdgeType.None;
     
     public Vector2 GetEdgeCorrectPoint(Vector2 startPoint, Vector2 endPoint, out EdgeType alignEdge)
@@ -94,7 +96,12 @@ public class EdgeHandler : MonoBehaviour
     }
     public void CompleteEdge(EdgeType edgeType)
     {
-        activeEdgeTypes |= edgeType;
+        activeEdgeTypes = activeEdgeTypes &~ edgeType;
+        if(dictEdge.TryGetValue(edgeType, out var edgeObj))
+        {
+            Destroy(edgeObj);
+            dictEdge.Remove(edgeType);
+        }
     }
     Vector2 AlignToTop(Vector2 point, out EdgeType alignEdge)
     {
@@ -132,6 +139,8 @@ public class EdgeHandler : MonoBehaviour
     }
     public void DrawEdge(Rect rect, EdgeType edgeType)
     {
+        if(dictEdge == null)
+            dictEdge = new Dictionary<EdgeType, GameObject>();
         if((activeEdgeTypes & edgeType)!=0)
         {
             Vector2 start, end;
@@ -162,6 +171,7 @@ public class EdgeHandler : MonoBehaviour
             edgeObj.transform.localScale = new Vector3(Vector2.Distance(start, end), edgeObj.transform.localScale.y, 0);
             edgeObj.transform.rotation = Quaternion.FromToRotation(Vector3.right, end - start);
             edgeObj.transform.position = (start + end) * 0.5f;
+            dictEdge.Add(edgeType, edgeObj);
         }
     }
 }

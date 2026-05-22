@@ -13,9 +13,9 @@ public class InterestPointBasic : MonoBehaviour
     {
         hitbox.enabled = true;
     }
-    public PhotoDistributor GetNextPhoto()
+    public PhotoDistributorData GetNextPhoto()
     {
         Destroy(gameObject);
-        return photo.GetPhotoInstance();
+        return photo;
     }
 }
