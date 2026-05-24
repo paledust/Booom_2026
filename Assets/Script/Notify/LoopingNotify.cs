@@ -4,25 +4,22 @@ using UnityEngine;
 public class LoopingNotify : MonoBehaviour
 {
     [Header("Notify config")]
-    [SerializeField] private bool notifyOnStart;
+    [SerializeField] private float notifyStartDelay;
     [SerializeField] private float notifyIntersection;
     [SerializeField] private float notifyDuration;
 
     [Header("Display Config")]
     [SerializeField] private SpriteRenderer notifyRender;
 
-    [Header("Audio Config")]
-    [SerializeField] private string sfxOnNotify;
-    [SerializeField, Range(0, 1)] private float sfxVolume;
-
     private float timer;
     private bool isNotifying;
 
     void Start()
     {
-        timer = 0;
-        if(notifyOnStart)
+        timer = -notifyStartDelay;
+        if(timer > 0)
         {
+            timer = 0;
             BeginNotify();
         }
     }
@@ -53,6 +50,5 @@ public class LoopingNotify : MonoBehaviour
     {
         isNotifying = true;
         notifyRender.enabled = true;
-        AudioManager.Instance.PlaySFX(sfxOnNotify, sfxVolume);
     }
 }

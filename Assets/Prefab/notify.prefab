@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9117035426182977919}
   - component: {fileID: 9132868576719327924}
-  - component: {fileID: 5826685178062184969}
+  - component: {fileID: 3999402009356085639}
   - component: {fileID: 3477114621945080492}
   m_Layer: 0
   m_Name: notify
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.56, y: 1.82, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.19846943, y: 0.0361, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 68e3689aa516fa140a8f95fed4d71dcd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,10 +81,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -3140209220045119398, guid: 5f4452605c8d4ef4d831fb4e7c6411bb, type: 3}
-  m_Color: {r: 1, g: 0.81864506, b: 0.57254905, a: 1}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Color: {r: 1, g: 0.8861347, b: 0.73018867, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -93,28 +93,23 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!95 &5826685178062184969
-Animator:
-  serializedVersion: 7
+--- !u!111 &3999402009356085639
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 252341172094935997}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3f1bc50d8c9321c49807c5911edac980, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 4fcc655a525d8ce4f952188867a565a0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 4fcc655a525d8ce4f952188867a565a0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
   m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!114 &3477114621945080492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,9 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c7fd7313fc9eb042944275ff01c6e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IPIntersectComponent
-  notifyOnStart: 1
+  notifyStartDelay: 0
   notifyIntersection: 2
   notifyDuration: 1.7
   notifyRender: {fileID: 9132868576719327924}
-  sfxOnNotify: sfx_phone_hero
-  sfxVolume: 0.3

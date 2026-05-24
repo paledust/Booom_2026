@@ -173,7 +173,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 127
 --- !u!114 &400117802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,6 +378,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1568973297}
     m_Modifications:
+    - target: {fileID: 46531901026789440, guid: 12e0e346df9c8f049906162f53c5e766, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 127
+      objectReference: {fileID: 0}
     - target: {fileID: 4759861360168245592, guid: 12e0e346df9c8f049906162f53c5e766, type: 3}
       propertyPath: m_Name
       value: GameManager
