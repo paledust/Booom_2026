@@ -15,5 +15,5 @@ public abstract class PhotoDistributor
         this.edgeConfig = edgeConfig;
     }
     public PhotoEdgeConfig GetEdgeConfig()=>edgeConfig;
-    public abstract GameObject GetPhotoPrefab();
+    public abstract Photo GetPhoto();
 }

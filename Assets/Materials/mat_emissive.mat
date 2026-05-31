@@ -58,7 +58,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Clip: 0.5
-    - _Emissive: 15
+    - _Emissive: 5
     - _EnableExternalAlpha: 0
     - _Float0: 5.54
     - _ImgScale: 7

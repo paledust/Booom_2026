@@ -414,7 +414,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1727120417}
-  - {fileID: 1413034303}
   m_Father: {fileID: 1560006373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &980456479
@@ -494,11 +493,6 @@ Transform:
   - {fileID: 703329505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1413034303 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-  m_PrefabInstance: {fileID: 2358589650421687024}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1560006372
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,11 +675,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9cf229628a2f64ab522d03ed246d58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DragToCreatePhoto
-  photoPrefab: {fileID: 3515955417355683980, guid: 0b8062d01c5a12f49ac641e8ef42d95f, type: 3}
+  framePrefab: {fileID: 3515955417355683980, guid: 0b8062d01c5a12f49ac641e8ef42d95f, type: 3}
+  photoPrefab: {fileID: 2935387448561288443, guid: c415ffe83bf17f8439ec1dc76f04e659, type: 3}
+  dragFrame: {fileID: 21300000, guid: 1fab8fcaecb7d174cbb8fd1e9d3c2b64, type: 3}
   poolFrames:
-  - {fileID: 21300000, guid: 1fab8fcaecb7d174cbb8fd1e9d3c2b64, type: 3}
-  maxSize: {x: 6, y: 6}
-  minSize: {x: 1, y: 1}
+  - {fileID: 21300000, guid: 2db1728df873a7446baf846ecec19510, type: 3}
+  - {fileID: 21300000, guid: 2e5c75f94899c154aa98f12c6bf8eb23, type: 3}
+  - {fileID: 21300000, guid: def00f816346b004985c6abdce69ceae, type: 3}
+  - {fileID: 21300000, guid: 71dbfb8bdbe97614596bdc4a7c4c2f6d, type: 3}
+  - {fileID: 21300000, guid: 562debfe0ae14f241b6c8713edebaf54, type: 3}
+  - {fileID: 21300000, guid: a90118598b5e4564cbaa12e2874fe8cd, type: 3}
+  - {fileID: 21300000, guid: fd4f73856a9034249b01d79ba59a42d8, type: 3}
+  - {fileID: 21300000, guid: 67d47ad3661b8e540ac3e809110bf04c, type: 3}
+  - {fileID: 21300000, guid: aa73c99ff34505f498450873da325de1, type: 3}
+  - {fileID: 21300000, guid: f96b589e25a73074ca67219c1b6d0d28, type: 3}
+  - {fileID: 21300000, guid: cc09d49cdee328549aa1eb5684a50929, type: 3}
+  - {fileID: 21300000, guid: c82a38954dec8ff4daef07645c4c0731, type: 3}
+  maxSize: {x: 4, y: 4}
+  minSize: {x: 1.5, y: 1.5}
   maskHandler:
     maskPrerfab: {fileID: 3515955417355683980, guid: 16d40ae22c39ccc4b86df00571fa3f1d, type: 3}
   edgeHandler: {fileID: 1808112246}
@@ -715,75 +722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39bb2126524744146aeee52a26ecfc7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhotoDistributeController
---- !u!1001 &2358589650421687024
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 980456478}
-    m_Modifications:
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.613
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.079
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 401088555142241002, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8531679620799411143, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_Name
-      value: interest_point
-      objectReference: {fileID: 0}
-    - target: {fileID: 8945557957497385114, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_Color.b
-      value: 0.8132075
-      objectReference: {fileID: 0}
-    - target: {fileID: 8945557957497385114, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_Color.g
-      value: 0.921493
-      objectReference: {fileID: 0}
-    - target: {fileID: 8945557957497385114, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 003c6da1d0be3704bbc268f18a816459, type: 3}
+  startPhotoDistributor:
+  - {fileID: 11400000, guid: 5392c5dc61f9af54190370b9a913b8af, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

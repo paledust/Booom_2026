@@ -50,7 +50,9 @@ public class DragToCreatePhoto : MonoBehaviour
     }
 #endregion
 
+    [SerializeField] private GameObject framePrefab;
     [SerializeField] private GameObject photoPrefab;
+    [SerializeField] private Sprite dragFrame;
     [SerializeField] private Sprite[] poolFrames;
     [SerializeField] private Vector2 maxSize;
     [SerializeField] private Vector2 minSize;
@@ -92,7 +94,7 @@ public class DragToCreatePhoto : MonoBehaviour
         {
             var worldPos = Camera.main.ScreenToWorldPoint(playerActions.PointerPosition.ReadValue<Vector2>());
             worldPos.z = 0;
-            Vector2 targetPoint = worldPos;
+            Vector2 targetPoint = ClampPoint(worldPos);
 
             if(edgeHandler.m_hasEdge)
             {
@@ -105,14 +107,6 @@ public class DragToCreatePhoto : MonoBehaviour
 
             maxPoint = Vector2.Lerp(maxPoint, targetPoint, Time.deltaTime * 40);
             var rect = Rect.MinMaxRect(minPoint.x, minPoint.y, maxPoint.x, maxPoint.y);
-            if(rect.width > maxSize.x)
-                rect.xMax = rect.xMin + maxSize.x;
-            else if(rect.width < -maxSize.x)
-                rect.xMax = rect.xMin - maxSize.x;
-            if(rect.height > maxSize.y)
-                rect.yMax = rect.yMin + maxSize.y;
-            else if(rect.height < -maxSize.y)
-                rect.yMax = rect.yMin - maxSize.y;
             
             currentFrame.UpdateFrame(rect, FRAME_OFFSET);
             maskHandler.UpdateMask(currentFrame.transform.position, rect.size);
@@ -127,40 +121,39 @@ public class DragToCreatePhoto : MonoBehaviour
             minPoint = worldPos;
             maxPoint = worldPos;
 
-            var go = Instantiate(photoPrefab, worldPos, Quaternion.identity);
+            var go = Instantiate(framePrefab, worldPos, Quaternion.identity);
             currentFrame = go.GetComponent<PhotoFrame>();
-            currentFrame.Init(worldPos, layerIndex, poolFrames[frameIndex]);
-            frameIndex++;
-            if(frameIndex >= poolFrames.Length)
-            {
-                frameIndex = 0;
-                Service.Shuffle(ref poolFrames);
-            }
+            currentFrame.Init(worldPos, layerIndex, dragFrame);
         }
     }
     void OnRelease(InputAction.CallbackContext context)
     {
         if(currentFrame != null)
         {
-            Vector2 min = new Vector2(Mathf.Min(minPoint.x, maxPoint.x), Mathf.Min(minPoint.y, maxPoint.y));
-            Vector2 max = new Vector2(Mathf.Max(minPoint.x, maxPoint.x), Mathf.Max(minPoint.y, maxPoint.y));
-            var rect = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
-
-            minPoint = rect.min;
-            maxPoint = rect.max;
-
+            var rect = Rect.MinMaxRect(minPoint.x, minPoint.y, maxPoint.x, maxPoint.y);
+            
             if(Mathf.Abs(rect.width) < minSize.x || Mathf.Abs(rect.height) < minSize.y)
             {
                 CancelFrame();
                 return;
             }
+
+            minPoint = rect.min;
+            maxPoint = rect.max;
+
+            Vector2 min = new Vector2(Mathf.Min(minPoint.x, maxPoint.x), Mathf.Min(minPoint.y, maxPoint.y));
+            Vector2 max = new Vector2(Mathf.Max(minPoint.x, maxPoint.x), Mathf.Max(minPoint.y, maxPoint.y));
+            rect = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+
+            minPoint = min;
+            maxPoint = max;
             
             if(currentBlockEdge != EdgeType.None && currentPhoto!=null)
             {
                 var edgeConfig = currentPhoto.GetEdgeConfig();
                 if((edgeConfig.edge & currentBlockEdge) > 0)
                 {
-                    FixPhoto(rect, edgeConfig.photoDatas, false);
+                    FixPhoto(rect, DataToDistributor(edgeConfig.photoDatas), false);
                     edgeHandler.CompleteEdge(currentBlockEdge);
                     currentBlockEdge = EdgeType.None;
                 }
@@ -170,27 +163,52 @@ public class DragToCreatePhoto : MonoBehaviour
             var interestPoint = FrameDetector.DetectSelectingFrame(rect.min, rect.max);
             if(interestPoint == null)
             {
-                CancelFrame();
+                if(currentPhoto != null)
+                    FixPhoto(rect, currentPhoto, true);
+                else
+                    FixPhoto(rect, photoDistributeController.GetDefaultPhotoDistributor(), true);
                 return;    
             }
 
-            FixPhoto(rect, interestPoint.GetNextPhoto(), true);
+            FixPhoto(rect, DataToDistributor(interestPoint.GetNextPhoto()), true);
         }
     }
-    void FixPhoto(Rect rect, PhotoDistributorData photoData, bool setAsMainPhoto)
+    Vector3 ClampPoint(Vector2 maxPoint)
     {
-        var photo = photoDistributeController.GetPhotoDistributor(photoData);
+        if(maxPoint.x > maxSize.x + minPoint.x)
+            maxPoint.x = minPoint.x + maxSize.x;
+        else if(maxPoint.x < -maxSize.x + minPoint.x)
+            maxPoint.x = minPoint.x - maxSize.x;
+        if(maxPoint.y > maxSize.y + minPoint.y)
+            maxPoint.y = minPoint.y + maxSize.y;
+        else if(maxPoint.y < -maxSize.y + minPoint.y)
+            maxPoint.y = minPoint.y - maxSize.y;
+        return maxPoint;
+    }
+    PhotoDistributor DataToDistributor(PhotoDistributorData data) => photoDistributeController.GetPhotoDistributor(data);
+    void FixPhoto(Rect rect, PhotoDistributor distributor, bool setAsMainPhoto)
+    {
         layerIndex++;
+        currentFrame.SetFrameStyle(poolFrames[frameIndex]);
+        frameIndex++;
+        if(frameIndex >= poolFrames.Length)
+        {
+            frameIndex = 0;
+            Service.Shuffle(ref poolFrames);
+        }
         currentFrame.UpdateFrame(rect, FRAME_OFFSET);
-        currentFrame.FixPhoto(photo.GetPhotoPrefab(), layerIndex);
+
+        var photo = distributor.GetPhoto();
+        var photoObj = photo.photoObj??photoPrefab;
+        currentFrame.FixPhoto(photoObj, photo.photoPic, layerIndex);
 
         currentFrame = null;
         maskHandler.ClearMask();
 
         if(setAsMainPhoto)
         {
-            currentPhoto = photo;
-            edgeHandler.CreateConstraintRect(rect, photo.GetEdgeConfig().edge);
+            currentPhoto = distributor;
+            edgeHandler.CreateConstraintRect(rect, distributor.GetEdgeConfig().edge);
         }
     }
     void CancelFrame()
