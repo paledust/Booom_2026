@@ -13,4 +13,5 @@ public class Location
         this.locationConnection = locationConnection;
     }
     public Sprite GetLocationSprite(bool isDay) => isDay ? daySprite : nightSprite;
+    public bool TryGetNextLocation(Direction dir, out string nextLocation) => locationConnection.TryGetValue(dir, out nextLocation);
 }

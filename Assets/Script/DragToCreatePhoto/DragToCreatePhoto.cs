@@ -34,20 +34,6 @@ public class DragToCreatePhoto : MonoBehaviour
             return currentMaskRender;
         }
     }
-    // private static class FrameDetector
-    // {
-    //     public static InterestPointBasic DetectSelectingFrame(Vector2 min, Vector2 max)
-    //     {
-    //         var overlap = Physics2D.OverlapArea(min, max, 1<<InteractionService.InteractableLayer);
-    //         if(overlap == null)
-    //             return null;
-    //         if(overlap.TryGetComponent<InterestPointBasic>(out var interestPoint))
-    //         {
-    //             return interestPoint;
-    //         }
-    //         return null;
-    //     }
-    // }
 #endregion
 
     [SerializeField] private GameObject framePrefab;
@@ -135,6 +121,8 @@ public class DragToCreatePhoto : MonoBehaviour
             minPoint = min;
             maxPoint = max;
 
+            Vector2 center = 0.5f * (minPoint + maxPoint);
+            locationController.EvaluateLocation(center);
             FixPhoto(rect, locationController.GetLocation());
         }
     }
