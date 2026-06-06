@@ -23,7 +23,7 @@ public class PhotoFrame : MonoBehaviour
         selectingFrame.gameObject.SetActive(false);
         photo = Instantiate(photoPrefab, transform);
         photo.GetComponent<SpriteRenderer>().sprite = photoPic;
-        photo.transform.localScale = new Vector3(frame.size.x/5f, frame.size.y/5, 0);
+        photo.transform.localScale = new Vector3(frame.size.x/10f, frame.size.y/10f, 0);
         photo.transform.SetSiblingIndex(0);
         sortingGroup.sortingLayerID = SortingLayer.NameToID(DEFAULT_LAYER);
         sortingGroup.sortingOrder = layerIndex;

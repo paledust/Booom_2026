@@ -34,20 +34,20 @@ public class DragToCreatePhoto : MonoBehaviour
             return currentMaskRender;
         }
     }
-    private static class FrameDetector
-    {
-        public static InterestPointBasic DetectSelectingFrame(Vector2 min, Vector2 max)
-        {
-            var overlap = Physics2D.OverlapArea(min, max, 1<<InteractionService.InteractableLayer);
-            if(overlap == null)
-                return null;
-            if(overlap.TryGetComponent<InterestPointBasic>(out var interestPoint))
-            {
-                return interestPoint;
-            }
-            return null;
-        }
-    }
+    // private static class FrameDetector
+    // {
+    //     public static InterestPointBasic DetectSelectingFrame(Vector2 min, Vector2 max)
+    //     {
+    //         var overlap = Physics2D.OverlapArea(min, max, 1<<InteractionService.InteractableLayer);
+    //         if(overlap == null)
+    //             return null;
+    //         if(overlap.TryGetComponent<InterestPointBasic>(out var interestPoint))
+    //         {
+    //             return interestPoint;
+    //         }
+    //         return null;
+    //     }
+    // }
 #endregion
 
     [SerializeField] private GameObject framePrefab;
@@ -57,23 +57,19 @@ public class DragToCreatePhoto : MonoBehaviour
     [SerializeField] private Vector2 maxSize;
     [SerializeField] private Vector2 minSize;
     [SerializeField] private MaskHandler maskHandler;
-    [SerializeField] private EdgeHandler edgeHandler;
-    [SerializeField] private PhotoDistributeController photoDistributeController;
+    [SerializeField] private LocationController locationController;
     
     private PlayerInputAction.PlayerActions playerActions;
     private PhotoFrame currentFrame;
-    private PhotoDistributor currentPhoto;
     private Vector2 minPoint;
     private Vector2 maxPoint;
     private int layerIndex;
     private int frameIndex;
-    private EdgeType currentBlockEdge;
 
     private const float FRAME_OFFSET = 0.01f;
 
     void Start()
     {
-        currentPhoto = null;
         playerActions = new PlayerInputAction().Player;
         Service.Shuffle(ref poolFrames);
         frameIndex = 0;
@@ -95,15 +91,6 @@ public class DragToCreatePhoto : MonoBehaviour
             var worldPos = Camera.main.ScreenToWorldPoint(playerActions.PointerPosition.ReadValue<Vector2>());
             worldPos.z = 0;
             Vector2 targetPoint = ClampPoint(worldPos);
-
-            if(edgeHandler.m_hasEdge)
-            {
-                targetPoint = edgeHandler.GetEdgeCorrectPoint(minPoint, targetPoint, out var alignEdge);
-                if(alignEdge == EdgeType.None && currentBlockEdge != EdgeType.None)
-                    currentBlockEdge = EdgeType.None;
-                if(alignEdge != EdgeType.None && currentBlockEdge == EdgeType.None)
-                    currentBlockEdge = alignEdge;
-            }
 
             maxPoint = Vector2.Lerp(maxPoint, targetPoint, Time.deltaTime * 40);
             var rect = Rect.MinMaxRect(minPoint.x, minPoint.y, maxPoint.x, maxPoint.y);
@@ -147,30 +134,8 @@ public class DragToCreatePhoto : MonoBehaviour
 
             minPoint = min;
             maxPoint = max;
-            
-            if(currentBlockEdge != EdgeType.None && currentPhoto!=null)
-            {
-                var edgeConfig = currentPhoto.GetEdgeConfig();
-                if((edgeConfig.edge & currentBlockEdge) > 0)
-                {
-                    FixPhoto(rect, DataToDistributor(edgeConfig.photoDatas), false);
-                    edgeHandler.CompleteEdge(currentBlockEdge);
-                    currentBlockEdge = EdgeType.None;
-                }
-                return;
-            }
 
-            var interestPoint = FrameDetector.DetectSelectingFrame(rect.min, rect.max);
-            if(interestPoint == null)
-            {
-                if(currentPhoto != null)
-                    FixPhoto(rect, currentPhoto, true);
-                else
-                    FixPhoto(rect, photoDistributeController.GetDefaultPhotoDistributor(), true);
-                return;    
-            }
-
-            FixPhoto(rect, DataToDistributor(interestPoint.GetNextPhoto()), true);
+            FixPhoto(rect, locationController.GetLocation());
         }
     }
     Vector3 ClampPoint(Vector2 maxPoint)
@@ -185,8 +150,7 @@ public class DragToCreatePhoto : MonoBehaviour
             maxPoint.y = minPoint.y - maxSize.y;
         return maxPoint;
     }
-    PhotoDistributor DataToDistributor(PhotoDistributorData data) => photoDistributeController.GetPhotoDistributor(data);
-    void FixPhoto(Rect rect, PhotoDistributor distributor, bool setAsMainPhoto)
+    void FixPhoto(Rect rect, Location distributor)
     {
         layerIndex++;
         currentFrame.SetFrameStyle(poolFrames[frameIndex]);
@@ -198,18 +162,11 @@ public class DragToCreatePhoto : MonoBehaviour
         }
         currentFrame.UpdateFrame(rect, FRAME_OFFSET);
 
-        var photo = distributor.GetPhoto();
-        var photoObj = photo.photoObj??photoPrefab;
-        currentFrame.FixPhoto(photoObj, photo.photoPic, layerIndex);
+        var photo = distributor.GetLocationSprite(false);
+        currentFrame.FixPhoto(photoPrefab, photo, layerIndex);
 
         currentFrame = null;
         maskHandler.ClearMask();
-
-        if(setAsMainPhoto)
-        {
-            currentPhoto = distributor;
-            edgeHandler.CreateConstraintRect(rect, distributor.GetEdgeConfig().edge);
-        }
     }
     void CancelFrame()
     {

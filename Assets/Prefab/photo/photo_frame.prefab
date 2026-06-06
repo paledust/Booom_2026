@@ -124,7 +124,6 @@ Transform:
   m_Children:
   - {fileID: 8041678292308048868}
   - {fileID: 6493399559724059776}
-  - {fileID: 5924981346423059147}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &4858080427687178849
@@ -154,7 +153,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PhotoFrame
   frame: {fileID: 5733643309185733042}
   selectingFrame: {fileID: 690295438610919105}
-  photo: {fileID: 0}
   sortingGroup: {fileID: 4858080427687178849}
 --- !u!1 &3670551330218575801
 GameObject:
@@ -247,34 +245,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &6838604779034999247
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5924981346423059147}
-  m_Layer: 0
-  m_Name: '#interest_point'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5924981346423059147
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6838604779034999247}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1486537906846648403}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

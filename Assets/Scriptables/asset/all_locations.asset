@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64e03c22991c8c6408ff412c31ad3f4b, type: 3}
+  m_Name: all_locations
+  m_EditorClassIdentifier: Assembly-CSharp::LocationDataCollection
+  allLocations:
+  - {fileID: 11400000, guid: cc480eefaeae3894092342f8a78f6774, type: 2}
+  - {fileID: 11400000, guid: 21d9fab4f8b68cb40815f068e85ae7c3, type: 2}
+  - {fileID: 11400000, guid: cfc3c23b13b5be1459e3e7e54e4496a2, type: 2}
+  - {fileID: 11400000, guid: 9c803668d516f524b9d582f20600653b, type: 2}
