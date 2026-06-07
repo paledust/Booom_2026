@@ -18,10 +18,6 @@ public class LocationDataCollection : ScriptableObject
         string path = AssetDatabase.GetAssetPath(this);
         path = Path.GetDirectoryName(path);
         allLocations = FindAllAssetsOfAllSubFolders<LocationData>(path);
-        foreach(var location in allLocations)
-        {
-            location.Validate();
-        }
         EditorUtility.SetDirty(this);
     }
     public static List<T> FindAllAssetsOfAllSubFolders<T>(string folderPath, List<string> excludedFolders = null) where T : ScriptableObject

@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -20,11 +21,18 @@ public class LocationData : ScriptableObject
     [SerializeField] private Sprite locationSpriteDay;
 
     [Header("Mapping")]
-    [SerializeField] private LocationData forwardLocation;
-    [SerializeField] private LocationData backwardLocation;
-    [SerializeField] private LocationData rightLocation;
-    [SerializeField] private LocationData leftLocation;
+    [SerializeField, OnValueChanged("ValidateLocationForward")] private LocationData forwardLocation;
+    [SerializeField, OnValueChanged("ValidateLocationBackward")] private LocationData backwardLocation;
+    [SerializeField, OnValueChanged("ValidateLocationRight")] private LocationData rightLocation;
+    [SerializeField, OnValueChanged("ValidateLocationLeft")] private LocationData leftLocation;
 
+    void OnReset()
+    {
+        forwardLocation = null;
+        backwardLocation = null;
+        rightLocation = null;
+        leftLocation = null;
+    }
     public Location GetLocation()
     {
         Dictionary<Direction, string> adjacentLoc = new Dictionary<Direction, string>();
@@ -39,68 +47,50 @@ public class LocationData : ScriptableObject
             
         return new Location(locationSpriteNight, locationSpriteDay, adjacentLoc);
     }
+    
 #if UNITY_EDITOR
-    public void Validate()
+    [Button("Reset")]
+    public void ResetLocation()
     {
-        if(forwardLocation!=null)
+        forwardLocation = null;
+        backwardLocation = null;
+        rightLocation = null;
+        leftLocation = null;
+        EditorUtility.SetDirty(this);
+    }
+    void ValidateLocationForward()=>ValidateLocation(Direction.Forward);
+    void ValidateLocationBackward()=>ValidateLocation(Direction.Backward);
+    void ValidateLocationRight()=>ValidateLocation(Direction.Right);
+    void ValidateLocationLeft()=>ValidateLocation(Direction.Left);
+    void ValidateLocation(Direction dir)
+    {
+        LocationData data = null;
+        switch(dir)
         {
-            if(forwardLocation.backwardLocation != this)
-            {
-                if(forwardLocation.backwardLocation!=null)
-                {
-                    Debug.LogError($"Location not match: forward location - {forwardLocation.name} of {name} is not the others' backward location");
-                }
-                else
-                {
+            case Direction.Forward:
+                data = forwardLocation;
+                if(forwardLocation!=null)
                     forwardLocation.backwardLocation = this;
-                    EditorUtility.SetDirty(forwardLocation);
-                }
-            }
-        }
-        if(backwardLocation!=null)
-        {
-            if(backwardLocation.forwardLocation != this)
-            {
-                if(backwardLocation.forwardLocation!=null)
-                {
-                    Debug.LogError($"Location not match: forward location - {forwardLocation.name} of {name} is not the others' forward location");
-                }
-                else
-                {
+                break;
+            case Direction.Backward:
+                data = backwardLocation;
+                if(backwardLocation!=null)
                     backwardLocation.forwardLocation = this;
-                    EditorUtility.SetDirty(backwardLocation);
-                }
-            }
-        }
-        if(rightLocation!=null)
-        {
-            if(rightLocation.leftLocation != this)
-            {
-                if(rightLocation.leftLocation!=null)
-                {
-                    Debug.LogError($"Location not match: forward location - {rightLocation.name} of {name} is not the others' leftLocation location");
-                }
-                else
-                {
+                break;
+            case Direction.Right:
+                data = rightLocation;
+                if(rightLocation!=null)
                     rightLocation.leftLocation = this;
-                    EditorUtility.SetDirty(rightLocation);
-                }
-            }
-        }
-        if(leftLocation!=null)
-        {
-            if(leftLocation.rightLocation != this)
-            {
-                if(leftLocation.rightLocation!=null)
-                {
-                    Debug.LogError($"Location not match: forward location - {leftLocation.name} of {name} is not the others' rightLocation location");
-                }
-                else
-                {
+                break;
+            case Direction.Left:
+                data = leftLocation;
+                if(leftLocation!=null)
                     leftLocation.rightLocation = this;
-                    EditorUtility.SetDirty(leftLocation);
-                }
-            }
+                break;
+        }
+        if(data!=null)
+        {
+            EditorUtility.SetDirty(data);
         }
     }
 #endif

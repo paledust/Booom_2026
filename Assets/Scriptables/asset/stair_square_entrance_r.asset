@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73582a3302f357245a2fb66d57dac369, type: 3}
-  m_Name: stair_b_01
+  m_Name: stair_square_entrance_r
   m_EditorClassIdentifier: Assembly-CSharp::LocationData
-  locationSpriteNight: {fileID: 21300000, guid: d7308f1a0414186419589b9f0a5615c2, type: 3}
-  locationSpriteDay: {fileID: 21300000, guid: 3221c6e51a419ec4dae9895f21c71611, type: 3}
-  forwardLocation: {fileID: 11400000, guid: 088385ac73ee64e46afee522be566941, type: 2}
-  backwardLocation: {fileID: 11400000, guid: cfc3c23b13b5be1459e3e7e54e4496a2, type: 2}
+  locationSpriteNight: {fileID: 21300000, guid: 82a6a298584d8734ca2fa103a45e178c, type: 3}
+  locationSpriteDay: {fileID: 21300000, guid: bdc8ba07b8f910a46b4dbffddaa7df33, type: 3}
+  forwardLocation: {fileID: 0}
+  backwardLocation: {fileID: 0}
   rightLocation: {fileID: 0}
-  leftLocation: {fileID: 0}
+  leftLocation: {fileID: 11400000, guid: ea7b1a4a53981d14abcb7c48a59e3d86, type: 2}
